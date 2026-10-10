@@ -1,0 +1,47 @@
+name: CI
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.14'
+          cache: pip
+          cache-dependency-path: server/requirements*.txt
+      - run: sudo apt-get update && sudo apt-get install -y liblcms2-2
+      - run: npm ci --legacy-peer-deps
+      - run: pip install -r server/requirements-dev.txt
+      - run: npm run check
+      - run: python -m pytest server -q
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - name: Browser scenarios with local export service
+        run: |
+          python -m uvicorn server.app:app --host 127.0.0.1 --port 8000 > /tmp/chromablind-api.log 2>&1 &
+          API_PID=$!
+          trap 'kill "$API_PID"' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8000/api/health; then break; fi
+            sleep 1
+          done
+          npm run test:ui
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-diagnostics
+          path: test-results/
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chromablind-build
+          path: dist/
+          retention-days: 7

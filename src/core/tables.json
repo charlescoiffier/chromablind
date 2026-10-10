@@ -1,0 +1,10 @@
+{
+  "profile": "fogra39-vigc",
+  "sha256": "8decbce6c2efafdce11eca36571f5e22b5cb85418343a87d84c9289369e3519e",
+  "rgbGrid": 33,
+  "cmykGrid": 17,
+  "format": "float32-little-endian",
+  "intent": "relative-colorimetric-with-black-point-compensation",
+  "source": "LittleCMS; Coated Fogra39L VIGC 260; ICC registry",
+  "method": "multilinear interpolation; approximate browser preview; direct stored CMYK PDF output"
+}
