@@ -13,7 +13,7 @@ export function loadFont(id = "Atkinson") {
   if (!fontPromises.has(id))
     fontPromises.set(
       id,
-      fetch(`/fonts/${id}-Regular.woff`)
+      fetch(`${import.meta.env.BASE_URL}fonts/${id}-Regular.woff`)
         .then((r) => {
           if (!r.ok) throw new Error("Police introuvable.");
           return r.arrayBuffer();

@@ -23,7 +23,7 @@ export function installColorTables(
 export function loadColorTables() {
   return (pending ??= Promise.all(
     ["rgb-cmyk", "cmyk-rgb", "cmyk-xyz"].map(async (name) => {
-      const r = await fetch(`/color/${name}.bin`);
+      const r = await fetch(`${import.meta.env.BASE_URL}color/${name}.bin`);
       if (!r.ok)
         throw new Error("Tables CMJN indisponibles. Rechargez l’application.");
       return new Float32Array(await r.arrayBuffer());

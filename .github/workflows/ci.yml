@@ -22,8 +22,20 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - run: pip install -r server/requirements-dev.txt
       - run: npm run check
+        env:
+          VITE_BASE_PATH: /chromablind/
       - run: python -m pytest server -q
       - run: npx playwright install --with-deps chromium firefox webkit
+      - name: Verify GitHub Pages build
+        run: |
+          VITE_BASE_PATH=/chromablind/ npx vite preview --host 127.0.0.1 --port 4173 > /tmp/chromablind-pages.log 2>&1 &
+          PREVIEW_PID=$!
+          trap 'kill "$PREVIEW_PID"' EXIT
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:4173/chromablind/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/verify-pages.mjs
       - name: Browser scenarios with local export service
         run: |
           python -m uvicorn server.app:app --host 127.0.0.1 --port 8000 > /tmp/chromablind-api.log 2>&1 &
@@ -45,3 +57,30 @@ jobs:
           name: chromablind-build
           path: dist/
           retention-days: 7
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: chromablind-build
+          path: dist
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - name: Publish GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

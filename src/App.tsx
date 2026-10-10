@@ -67,6 +67,12 @@ import type {
   Vec4,
 } from "./core/types";
 
+const exportAPI =
+  import.meta.env.VITE_EXPORT_API_URL?.replace(/\/$/, "") || "/api";
+const exportServiceAvailable =
+  import.meta.env.DEV ||
+  Boolean(import.meta.env.VITE_EXPORT_API_URL) ||
+  import.meta.env.BASE_URL === "/";
 const storageKey = "chromablind.project.v1";
 function initial() {
   try {
@@ -488,8 +494,8 @@ export default function App() {
     return () => window.removeEventListener("keydown", key);
   });
   useEffect(() => {
-    if (exportOpen)
-      fetch("/api/profiles")
+    if (exportOpen && exportServiceAvailable)
+      fetch(`${exportAPI}/profiles`)
         .then((r) => {
           if (!r.ok) throw new Error();
           return r.json();
@@ -620,7 +626,7 @@ export default function App() {
       if (profileFile) form.set("profile", profileFile);
       else form.set("profile_id", profileId);
       const response = await fetch(
-        kind === "pdf" ? "/api/export/pdf" : "/api/proof",
+        kind === "pdf" ? `${exportAPI}/export/pdf` : `${exportAPI}/proof`,
         { method: "POST", body: form },
       );
       if (!response.ok) {
@@ -2098,10 +2104,22 @@ export default function App() {
                 {error || notice}
               </p>
             )}
+            {!exportServiceAvailable && (
+              <p className="help">
+                Sur GitHub Pages, les projets et SVG sont disponibles. Le PDF
+                CMJN et l’épreuvage nécessitent le service d’export du
+                déploiement complet.
+              </p>
+            )}
             <div className="export-buttons">
               <button
                 className="secondary"
-                disabled={busy || exportBusy || (!profileId && !profileFile)}
+                disabled={
+                  !exportServiceAvailable ||
+                  busy ||
+                  exportBusy ||
+                  (!profileId && !profileFile)
+                }
                 onClick={() => requestExport("proof")}
               >
                 {exportBusy ? (
@@ -2113,7 +2131,12 @@ export default function App() {
               </button>
               <button
                 className="primary"
-                disabled={busy || exportBusy || (!profileId && !profileFile)}
+                disabled={
+                  !exportServiceAvailable ||
+                  busy ||
+                  exportBusy ||
+                  (!profileId && !profileFile)
+                }
                 onClick={() => requestExport("pdf")}
               >
                 <Download size={16} />

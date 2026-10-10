@@ -1,3 +1,6 @@
+> [!WARNING]
+> Ce projet a été vibecodé avec l’aide de l’intelligence artificielle.
+
 # chromablind
 
 [![CI](https://github.com/charlescoiffier/chromablind/actions/workflows/ci.yml/badge.svg)](https://github.com/charlescoiffier/chromablind/actions/workflows/ci.yml)
@@ -5,7 +8,7 @@
 Un atelier web pour créer des illustrations à bulles colorées dans l’esprit des planches d’Ishihara,
 et explorer ce que les modèles de perception changent dans leur lecture.
 
-**[Code source sur GitHub](https://github.com/charlescoiffier/chromablind)** · Version **0.3.0**
+**[Essayer l’application](https://charlescoiffier.github.io/chromablind/)** · Version **0.3.0**
 
 L’édition se fait sur votre appareil, sans compte. Les exports PDF et les épreuves avancées utilisent
 un petit service de conversion qui traite les fichiers en mémoire. L’application est un outil de création
@@ -187,9 +190,18 @@ aide, dimensions au clavier et rendu de 20 000 bulles. WebKit au format iPad ne 
 Le workflow [CI](https://github.com/charlescoiffier/chromablind/actions/workflows/ci.yml) effectue les tests du moteur,
 la compilation, les tests Python et les parcours Chromium/Firefox/WebKit à chaque push et pull request. Le build est
 conservé sept jours comme artefact ; les diagnostics de navigateur sont conservés en cas d’échec. Le badge reflétera
-les exécutions GitHub une fois le workflow poussé. Il ne publie pas automatiquement un hébergement.
+les exécutions GitHub. Sur un push vers `main`, le workflow publie ensuite l’éditeur sur GitHub Pages.
 
 ## Déployer
+
+L’éditeur est hébergé sur **[GitHub Pages](https://charlescoiffier.github.io/chromablind/)**.
+Les projets et SVG se sauvegardent depuis le navigateur. GitHub Pages ne peut pas exécuter le service Python :
+le PDF CMJN et l’épreuvage sont désactivés sur cette version. Pour ces fonctions, utiliser le déploiement complet ci-dessous.
+
+Le workflow publie les fichiers statiques après les vérifications sur `main`, avec le préfixe `/chromablind/`.
+Une API distante peut être indiquée au build avec `VITE_EXPORT_API_URL` (URL HTTPS complète se terminant par `/api`) ;
+elle doit autoriser cette origine dans sa configuration CORS.
+
 
 ```sh
 docker compose up --build
