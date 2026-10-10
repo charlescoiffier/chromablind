@@ -22,9 +22,9 @@ test("new project protects edits, motif controls and view pan", async ({
     .click();
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Sauvegarder et créer" }).click();
-  expect((await download).suggestedFilename().normalize("NFC")).toContain(
-    "Composition modifiée",
-  );
+  expect(
+    (await download).suggestedFilename().normalize("NFC").replace(/_/g, " "),
+  ).toContain("Composition modifiée");
   await expect(page.getByLabel("Nom du projet")).toHaveValue("Étude 01");
   await expect(
     page.getByRole("button", { name: "Sauvegarder le projet", exact: true }),

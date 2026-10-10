@@ -265,8 +265,13 @@ test("discards an obsolete softproof after a palette change", async ({
 }) => {
   await page.goto("/");
   await expect(page.getByTestId("disk-count")).not.toHaveText("0 bulles");
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const response = page.waitForResponse("**/api/proof");
   await page.route("**/api/proof", async (route) => {
-    await new Promise((r) => setTimeout(r, 600));
+    await gate;
     await route.fulfill({
       json: {
         colors: [],
@@ -284,7 +289,7 @@ test("discards an obsolete softproof after a palette change", async ({
     .click();
   await page.getByLabel("Profil du catalogue").selectOption("fogra47-vigc");
   await page.getByRole("button", { name: "Épreuver", exact: true }).click();
-  await page.getByRole("button", { name: "Fermer les exports" }).click();
+  await page.keyboard.press("Escape");
   if (
     await page
       .getByRole("button", { name: "Afficher les simulations", exact: true })
@@ -294,6 +299,8 @@ test("discards an obsolete softproof after a palette change", async ({
       .getByRole("button", { name: "Afficher les simulations", exact: true })
       .click();
   await page.getByLabel("Profil ciblé").selectOption("protan");
+  release();
+  await response;
   await expect(page.locator(".status-message[role=status]")).toContainText(
     "Relancez",
   );
