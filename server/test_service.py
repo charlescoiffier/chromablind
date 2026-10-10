@@ -115,3 +115,10 @@ def test_browser_interpolation_tables_track_the_native_reference():
  with Session(data) as s:
   reference=s.transform([(0.5,0.25,0.75)],s.source,RGB,s.destination,CMYK,4)[0]
  assert interpolate(table('rgb-cmyk'),[.5,.25,.75],33,4)==pytest.approx([v/100 for v in reference],abs=1e-7)
+
+def test_health_reports_installed_color_engine():
+ response=client.get('/api/health')
+ assert response.status_code==200
+ assert response.json()['status']=='ok'
+ assert response.json()['colorEngine'].startswith('LittleCMS ')
+ assert response.json()['colorEngine']!='LittleCMS None'

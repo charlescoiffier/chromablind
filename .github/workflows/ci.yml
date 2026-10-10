@@ -45,6 +45,7 @@ jobs:
             if curl --fail --silent http://127.0.0.1:8000/api/health; then break; fi
             sleep 1
           done
+          curl --fail --silent http://127.0.0.1:8000/api/health
           npm run test:ui
       - uses: actions/upload-artifact@v4
         if: failure()

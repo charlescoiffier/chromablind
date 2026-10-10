@@ -4,7 +4,7 @@
 
 Les suites exécutables vérifient les invariants géométriques, la limite 20 000, les références numériques, la sérialisation, les masques et les parcours de navigateur. La suite Python ouvre les PDF avec un lecteur indépendant (pypdf), vérifie dimensions, ICCBased, OutputIntent et commandes de courbes. Les profils réels FOGRA39/47 sont testés pour la conversion et l’épreuvage.
 
-Dernière vérification locale : 20 tests du moteur et de la couleur, 9 tests du service et 55 parcours de navigateur validés (19 Chromium, 18 Firefox, 18 WebKit), dont un geste multi-touch injecté avec Chromium. Les deux variantes de ce test tactile sont explicitement non exécutées sous Firefox et WebKit, dont l’injection native multi-touch n’est pas disponible dans ce harnais. Compilation TypeScript et build de production réussis. Le PDF CMJN a également été ouvert avec Poppler et contrôlé visuellement après rendu.
+Dernière vérification locale : 20 tests du moteur et de la couleur, 10 tests du service et 55 parcours de navigateur validés (19 Chromium, 18 Firefox, 18 WebKit), dont un geste multi-touch injecté avec Chromium. Les deux variantes de ce test tactile sont explicitement non exécutées sous Firefox et WebKit, dont l’injection native multi-touch n’est pas disponible dans ce harnais. Compilation TypeScript et build de production réussis. Le PDF CMJN a également été ouvert avec Poppler et contrôlé visuellement après rendu.
 
 Mesure indicative sur la machine de développement, navigateurs automatisés : import et affichage d’un projet de 20 000 disques en 182 ms sous Chromium, 585 ms sous Firefox et 125 ms sous WebKit au format tablette. Cette mesure ne caractérise pas les performances d’un iPad physique ni tous les paramètres de remplissage.
 

@@ -3,7 +3,7 @@ import io,json,math,os,hashlib
 from pathlib import Path
 from typing import Annotated
 import pydyf
-from PIL import ImageCms
+from PIL import ImageCms,features
 from .color_engine import transform_palette,proof_palette,transform_cmyk_palette,proof_cmyk_palette
 from fastapi import FastAPI,Depends,UploadFile,HTTPException
 from starlette.concurrency import run_in_threadpool
@@ -158,7 +158,7 @@ def make_pdf(d,data,profile,mode):
  output=io.BytesIO();pdf.write(output,version=b'1.7');return output.getvalue()
 
 @app.get('/api/health')
-def health():return {'status':'ok','colorEngine':'LittleCMS '+ImageCms.versions()[1],'pdfConformance':'profiled-pdf-not-pdfx'}
+def health():return {'status':'ok','colorEngine':'LittleCMS '+features.version("littlecms2"),'pdfConformance':'profiled-pdf-not-pdfx'}
 @app.get('/api/profiles')
 def profiles():return {'profiles':catalogue()}
 @app.post('/api/proof')
