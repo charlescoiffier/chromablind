@@ -1,0 +1,39 @@
+# Modèle de déploiement pour chromablind.charlescoiffier.fr (généré par scripts/new-site.sh)
+# Copié automatiquement sur le VPS dans ~/srv/chromablind/ à chaque déploiement.
+# Variables d'environnement de l'appli : fichier ~/srv/chromablind/.env sur le VPS (optionnel, jamais commité).
+services:
+  web:
+    image: ghcr.io/charlescoiffier/chromablind:latest
+    restart: unless-stopped
+    depends_on: [api]
+    networks: [web, internal]
+    mem_limit: 128m
+    cpus: 0.25
+    pids_limit: 100
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=web
+      - traefik.http.routers.chromablind.rule=Host(`chromablind.charlescoiffier.fr`)
+      - traefik.http.routers.chromablind.tls.certresolver=le
+      - traefik.http.services.chromablind.loadbalancer.server.port=8080
+
+  # API de conversion (exports PDF, épreuves avancées) : joignable uniquement par le front, via /api/
+  api:
+    image: ghcr.io/charlescoiffier/chromablind-api:latest
+    restart: unless-stopped
+    networks: [internal]
+    read_only: true
+    tmpfs:
+      - /tmp:size=32m
+    mem_limit: 384m
+    cpus: 0.5
+    pids_limit: 200
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  web:
+    external: true
+  internal:
