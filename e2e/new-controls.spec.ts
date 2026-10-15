@@ -42,6 +42,13 @@ test("new project protects edits, motif controls and view pan", async ({
   await expect(page.getByLabel("Épaisseur du trait")).toHaveCount(0);
   await page.getByRole("button", { name: "Centrer le motif" }).click();
   await page.getByRole("button", { name: "Couleurs", exact: true }).click();
+  await expect(
+    page.getByRole("button", { name: "Guidée", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByLabel("Effet recherché")).toHaveValue("vanishing");
+  await page
+    .getByRole("button", { name: "Création libre", exact: true })
+    .click();
   await page.getByText("Base · CMJN", { exact: true }).click();
   await page.getByLabel("Cyan", { exact: true }).fill("75");
   await expect(page.getByLabel("Cyan (%)")).toHaveCount(0);

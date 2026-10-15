@@ -261,3 +261,16 @@ describe("palettes anchored to a user base", () => {
         }
   });
 });
+
+describe("new project palette defaults", () => {
+  it("starts guided with standard reading, preserving choices when reopening", () => {
+    const fresh = defaultDocument();
+    expect(fresh.palette.mode).toBe("guided");
+    expect(fresh.palette.effect).toBe("vanishing");
+    fresh.palette = { ...fresh.palette, mode: "free", effect: "hidden" };
+    const reopened = parseDocument(JSON.stringify(fresh));
+    expect(reopened.palette.mode).toBe("free");
+    expect(reopened.palette.effect).toBe("hidden");
+    expect(defaultDocument().palette.mode).toBe("guided");
+  });
+});
