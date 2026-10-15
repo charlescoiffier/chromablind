@@ -40,7 +40,7 @@ lectures restent des recettes expérimentales, à vérifier avec des observateur
 
 ## Composer une illustration
 
-Un **Nouveau** projet commence sans motif, avec les paramètres recommandés pour un disque de 200 mm.
+Un **Nouveau** projet commence sans motif, avec les paramètres recommandés pour un disque de 200 mm, la palette **Guidée** et l’effet **Lecture standard**. Ces réglages s’appliquent aussi à la première ouverture ; les projets enregistrés gardent leurs propres choix.
 
 1. **Format** : choisir un disque ou un rectangle, saisir les dimensions en millimètres, puis valider avec
    **Entrée** ou en quittant le champ. La frappe seule ne relance pas le remplissage.

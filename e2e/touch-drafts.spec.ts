@@ -65,6 +65,9 @@ test("blank projects, persistent text/drawing drafts and contextual tools", asyn
   await page.getByRole("button", { name: "Format", exact: true }).click();
   await expect(page.locator(".footer-hint")).toContainText("Format");
   await page.getByRole("button", { name: "Couleurs", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Création libre", exact: true })
+    .click();
   await expect(page.getByLabel("Profil de recette")).toBeVisible();
   const before = await saved(page);
   await page.getByLabel("Profil de recette").selectOption("protan");
@@ -161,13 +164,11 @@ test("double reading keeps the chromatic distractors around motif B", async ({
     [140, 100],
     [141, 100],
   ].map(([x, y]) => ({ x, y, r: 0.3, color: 0 }));
-  await page
-    .getByTestId("project-input")
-    .setInputFiles({
-      name: "double.json",
-      mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify(d)),
-    });
+  await page.getByTestId("project-input").setInputFiles({
+    name: "double.json",
+    mimeType: "application/json",
+    buffer: Buffer.from(JSON.stringify(d)),
+  });
   await expect(page.getByTestId("disk-count")).toHaveText("5 bulles");
   const result = await saved(page);
   expect(result.disks.map((v: any) => Math.floor(v.color / 16))).toEqual([

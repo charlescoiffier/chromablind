@@ -34,6 +34,7 @@ describe("CMYK master", () => {
       true,
     );
     const d = withPrint(defaultDocument());
+    d.palette.mode = "free";
     d.palette.baseCMYK = ink;
     d.colors = buildPalette(d.palette);
     expect(() => parseDocument(JSON.stringify(d))).not.toThrow();

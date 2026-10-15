@@ -28,7 +28,7 @@ const motif = (text: string): Motif => ({
 });
 export function defaultDocument(): Document {
   const palette: Document["palette"] = {
-    mode: "free",
+    mode: "guided",
     effect: "vanishing",
     profile: "deutan",
     noise: 0.35,

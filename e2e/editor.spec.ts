@@ -26,6 +26,9 @@ test("creates a plate, recolors without moving circles, exports and undoes", asy
   await page.getByRole("button", { name: "Motif", exact: true }).click();
   await page.getByLabel("Texte du motif").fill("É");
   await page.getByRole("button", { name: "Couleurs", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Création libre", exact: true })
+    .click();
   await page.getByRole("button", { name: "Guidée", exact: true }).click();
   const after = await save();
   expect(after.disks.map((d: any) => [d.x, d.y, d.r])).toEqual(

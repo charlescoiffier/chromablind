@@ -263,6 +263,9 @@ test("a dark CMYK base survives save and reopen without rewriting its inks", asy
   await ready(page);
   await settings(page);
   await page.getByRole("button", { name: "Couleurs", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Création libre", exact: true })
+    .click();
   await page.getByText("Base · CMJN", { exact: true }).click();
   for (const [label, value] of [
     ["Cyan", "0"],
